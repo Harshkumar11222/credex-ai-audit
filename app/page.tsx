@@ -1,7 +1,9 @@
+import AuditForm from "@/components/forms/audit-form";
+
 export default function Home() {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-black text-white">
-      <h1 className="text-5xl font-bold">AI Spend Audit</h1>
+    <main className="min-h-screen bg-black text-white flex items-center justify-center p-6">
+      <AuditForm />
     </main>
   );
 }
