@@ -3,22 +3,31 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { runAudit } from "@/lib/audit/engine";
 
 export default function AuditForm() {
   const [teamSize, setTeamSize] = useState(1);
-  const [monthlySpend, setMonthlySpend] = useState(20);
+  const [useCase, setUseCase] = useState("coding");
+  const [chatgptSpend, setChatgptSpend] = useState(20);
+  const [chatgptPlan, setChatgptPlan] = useState("team");
   const [result, setResult] = useState<any>(null);
 
   const handleAudit = () => {
     const auditResult = runAudit({
       teamSize,
-      useCase: "coding",
+      useCase: useCase as any,
       tools: [
         {
           tool: "chatgpt",
-          plan: "team",
-          monthlySpend,
+          plan: chatgptPlan,
+          monthlySpend: chatgptSpend,
           seats: teamSize,
         },
       ],
@@ -28,7 +37,9 @@ export default function AuditForm() {
   };
 
   return (
-    <div className="max-w-xl mx-auto space-y-6">
+    <div className="max-w-xl mx-auto space-y-4 w-full">
+      <h1 className="text-4xl font-bold text-center">AI Spend Audit</h1>
+
       <Input
         type="number"
         placeholder="Team Size"
@@ -36,11 +47,35 @@ export default function AuditForm() {
         onChange={(e) => setTeamSize(Number(e.target.value))}
       />
 
+      <Select onValueChange={setUseCase}>
+        <SelectTrigger>
+          <SelectValue placeholder="Select Use Case" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="coding">Coding</SelectItem>
+          <SelectItem value="writing">Writing</SelectItem>
+          <SelectItem value="research">Research</SelectItem>
+          <SelectItem value="data">Data</SelectItem>
+          <SelectItem value="mixed">Mixed</SelectItem>
+        </SelectContent>
+      </Select>
+
+      <Select onValueChange={setChatgptPlan}>
+        <SelectTrigger>
+          <SelectValue placeholder="ChatGPT Plan" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="plus">Plus</SelectItem>
+          <SelectItem value="team">Team</SelectItem>
+          <SelectItem value="enterprise">Enterprise</SelectItem>
+        </SelectContent>
+      </Select>
+
       <Input
         type="number"
-        placeholder="Monthly Spend"
-        value={monthlySpend}
-        onChange={(e) => setMonthlySpend(Number(e.target.value))}
+        placeholder="ChatGPT Monthly Spend"
+        value={chatgptSpend}
+        onChange={(e) => setChatgptSpend(Number(e.target.value))}
       />
 
       <Button onClick={handleAudit} className="w-full">
